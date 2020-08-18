@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@2.0.1/dist/tf.min.js"></script>
+
+</head>
+
+<body>
+    <div class="img-warpper">
+        <img class="img" src="images/1295001468332720129.png" width="139" height="139" />
+        <p>
+            判定结果: <span class="result">计算中</span>
+        </p>
+    </div>
+    <div class="img-warpper">
+        <img class="img" src="images/1293822555833298945.png" width="139" height="139" />
+        <p>
+            判定结果: <span class="result">计算中</span>
+        </p>
+    </div>    
+    <div class="img-warpper">
+        <img class="img" src="images/1292421561517916161.png" width="139" height="139" />
+        <p>
+            判定结果: <span class="result">计算中</span>
+        </p>
+    </div>   
+    <div class="img-warpper">
+        <img class="img" src="images/1292772574833737728.png" width="139" height="139" />
+        <p>
+            判定结果: <span class="result">计算中</span>
+        </p>
+    </div>    
+
+    <script>
+        let net;
+
+        async function app() {
+            console.log('Loading net..');
+
+            // Load the model.
+            const model = await tf.loadLayersModel('js_target/model.json');
+            console.log('Successfully loaded model');
+
+            // Make a prediction through the model on our image.
+            const imgEls = document.getElementsByClassName('img-warpper');
+            for(let elm of imgEls){
+                let x = await tf.browser.fromPixels(elm.children[0]);
+                x = x.expandDims(0);
+                const result = await model.predict(x).data();
+                console.log(result);
+                elm.children[1].innerHTML = (result[1] != 0 ? "工商/无关紧要" : "好图")
+            }
+
+        }
+
+        app();
+    </script>
+</body>
+
+</html>
