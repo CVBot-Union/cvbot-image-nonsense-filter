@@ -8,6 +8,7 @@ from tensorflow.keras.preprocessing import image
 from werkzeug.utils import secure_filename
 from expiringdict import ExpiringDict
 from flask_cors import CORS
+from gevent.pywsgi import WSGIServer
 
 UPLOAD_FOLDER = 'upload/'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
@@ -108,4 +109,4 @@ def image_classifier():
         })
 
 if __name__ == '__main__':
-    app.run()
+    WSGIServer(('0.0.0.0', 5000), app).serve_forever()
