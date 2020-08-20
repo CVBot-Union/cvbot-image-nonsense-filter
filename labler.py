@@ -29,12 +29,8 @@ def predict(image_path):
 datapath = "./images/"
 
 label_dir = {
-    'a': './ads_anime_style/',
-    'n': './anime/',
-    'h': './ads_people/',
-    'p': './people/',
-    'u': './uncategorized/',
-    'j': './junk/'
+    'p': './train/people/',
+    'n': './train/nonsense/',
 }
 
 dataset_image = listdir(datapath)
@@ -45,24 +41,22 @@ for image_name in dataset_image:
 
     predict_dict = predict(join(datapath,image_name))
 
-    image = cv2.putText(image, 'Predict:' + predict_dict['human_class'],(50,50), cv2.FONT_HERSHEY_SIMPLEX,1,(255, 0, 0),2,cv2.LINE_AA)
     # image = cv2.putText(image, 'Conf Score:' + predict_dict['conf'],(50,50), cv2.FONT_HERSHEY_SIMPLEX,1,(255, 0, 0),2,cv2.LINE_AA)
+    image = cv2.resize(image,(600,600))
+    image = cv2.putText(image, 'Predict:' + predict_dict['human_class'],(50,50), cv2.FONT_HERSHEY_SIMPLEX,1,(255, 0, 0),2,cv2.LINE_AA)
     cv2.imshow('labler', image) 
     key = cv2.waitKey(0)
     print(key)
-    if key == ord('a'):
-        os.rename(join(datapath, image_name), join(label_dir['a'] + image_name))
-    elif key == ord('p'):
-        os.rename(join(datapath + image_name), join(label_dir['p'] + image_name))
-    elif key == ord('u'):
-        os.rename(join(datapath + image_name), join(label_dir['u'] + image_name))
-    elif key == ord('h'):
-        os.rename(join(datapath + image_name), join(label_dir['u'] + image_name))
-    elif key == ord('n'):
-        os.rename(join(datapath + image_name), join(label_dir['n'] + image_name))
-    elif key == ord('x'):
-        pass
-    elif key == 113:
-        break
+    try:
+        if key == ord('p'):
+            os.rename(join(datapath, image_name), join(label_dir['p'] + image_name))
+        elif key == ord('n'):
+            os.rename(join(datapath + image_name), join(label_dir['n'] + image_name))
+        elif key == ord('x'):
+            pass
+        elif key == 113:
+            break
+    except FileExistsError as e:
+        print(e)
 
 cv2.destroyAllWindows()  

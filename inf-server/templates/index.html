@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+
+<body>
+
+    <input type="file" onchange="handleFileUpload(this)" accept="image/x-png,image/jpeg" />
+    <div>
+        <p id="result"></p>
+    </div>
+    <img src="" style="width: 100%;height: auto;" alt="Image preview...">
+
+    <script>
+        const LABLES = ['无关紧要', '人'];
+        const resultElm = document.querySelector('#result');
+        const preview = document.querySelector('img');
+
+
+        function handleFileUpload(element) {
+            var file = element.files[0];
+            var formData = new FormData();
+            const reader = new FileReader();
+            formData.append("file", file);
+
+            reader.addEventListener("load", function () {
+                preview.src = reader.result;
+            }, false);
+
+            resultElm.innerHTML = '准备上传...';
+            axios.post('/predict', formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    },
+                    onUploadProgress(progressEvent) {
+                        resultElm.innerHTML = '正在上传:' + ((progressEvent.loaded / progressEvent.total) * 100).toFixed(2) + '%...'
+                    }
+                })
+                .then(res => res.data)
+                .then(data => {
+                    if (data.error) {
+                        resultElm.innerHTML = '处理中出现错误...\n' + data.msg
+                    } else {
+                        reader.readAsDataURL(file)
+                        let result_data = data.msg;
+                        resultElm.innerHTML = '';
+                        resultElm.innerHTML += `<span style="display:block">最佳判断:${LABLES[result_data.best_inf[0]]}</span>`
+                        result_data.complete_inf[0].map((v, i) => {
+                            resultElm.innerHTML += `<span style="display:block">${LABLES[i]}:${(v * 100).toFixed(2)}%</span>`;
+                        })
+                    }
+                    console.log(data)
+                })
+                .catch(e => {
+                    resultElm.innerHTML = '上传中出现错误...<br>' + e
+                    console.error(e)
+                })
+        }
+    </script>
+</body>
+
+</html>

@@ -140,7 +140,9 @@ logs/
 
 model.h5
 *.png
+*.jpg
 *.zip
 train_model/
+dist_model/
 
 js_target
