@@ -48,6 +48,7 @@ def predict():
         save_filename = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         file.save(save_filename)
         infer_result = netInfer(save_filename)
+        os.remove(save_filename)
         return jsonify({'error':False,'msg': {
             'complete_inf': infer_result.tolist(),
             'best_inf': infer_result.argmax(axis=-1).tolist()
