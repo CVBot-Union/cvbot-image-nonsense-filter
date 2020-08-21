@@ -71,7 +71,10 @@ def twipush_classifier():
     else:
         print(request.args.get('media_id') + ': Cache Hit.')
         infer_dict = cache.get(request.args.get('media_id'))
-    return jsonify({'error':False,'msg':infer_dict})
+    
+    resp = jsonify({'error':False,'msg':infer_dict})
+    resp.headers['X-InferCache-Miss'] = is_cache_miss
+    return resp
 
 
 
