@@ -45,7 +45,6 @@ def main(fpath=None,epoch=20):
         './train/',
         target_size=(SIZE, SIZE),
         class_mode='categorical',
-        batch_size = 16
     )
 
     test_gen = data_gen.flow_from_directory(
@@ -55,8 +54,8 @@ def main(fpath=None,epoch=20):
     )
     nclass = len(train_gen.class_indices)
     model = create_model(nclass)
-    model.compile(loss='categorical_crossentropy', 
-                optimizer=optimizers.SGD(lr=1e-4, 
+    model.compile(loss='binary_crossentropy', 
+                optimizer=optimizers.SGD(lr=1e-5, 
                                         momentum=0.9),
                 metrics=['accuracy'])
     model.summary()
@@ -64,7 +63,7 @@ def main(fpath=None,epoch=20):
     print(model.output.op.name)
 
     if fpath is None:
-        file_path="train_model/model.chkpt"
+        file_path="train_model/model_chkpt.h5"
     else:
         file_path = fpath
         model.load_weights(file_path)

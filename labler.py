@@ -26,7 +26,7 @@ def predict(image_path):
     return y_dict
 
 
-datapath = "./images/"
+datapath = "./uncategorized/"
 
 label_dir = {
     'p': './train/people/',
