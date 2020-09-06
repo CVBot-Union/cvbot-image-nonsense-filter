@@ -13,7 +13,7 @@ classes = ['nonsense','people']
 
 def predict(image_path):
     # This line must be executed before loading Keras model.
-    img = load_img(image_path, target_size=(139, 139))
+    img = load_img(image_path, target_size=(224, 224))
     x = img_to_array(img)
     x = np.expand_dims(x, axis=0)
     x = preprocess_input(x)

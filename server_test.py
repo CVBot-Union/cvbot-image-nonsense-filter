@@ -13,10 +13,10 @@ args = vars(ap.parse_args())
 
 image_path = args['image']
 # Preprocessing our input image
-img = image.img_to_array(image.load_img(image_path, target_size=(139, 139))) / 255.
+img = image.img_to_array(image.load_img(image_path, target_size=(224, 224))) / 255.
 
 payload = {
-    "instances": [{'inception_v3_input': img.tolist()}]
+    "instances": [{'resnet152v2_input': img.tolist()}]
 }
 
 # sending post request to TensorFlow Serving server

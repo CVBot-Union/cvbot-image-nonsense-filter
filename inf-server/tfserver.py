@@ -51,11 +51,11 @@ def twipush_classifier():
             return jsonify({'error':True,'msg':'Error While Downloading File'})
     
     if is_cache_miss:
-        img = image.img_to_array(image.load_img(save_filename, target_size=(139, 139))) / 255
+        img = image.img_to_array(image.load_img(save_filename, target_size=(224, 224))) / 255
         os.remove(save_filename)
         # Creating payload for TensorFlow serving request
         payload = {
-            "instances": [{'inception_v3_input': img.tolist()}]
+            "instances": [{'resnet152v2_input': img.tolist()}]
         }
 
         # Making POST request
