@@ -13,7 +13,7 @@ classes = ['nonsense','people']
 
 def predict(image_path):
     # This line must be executed before loading Keras model.
-    img = load_img(image_path, target_size=(224, 224))
+    img = load_img(image_path, target_size=(139, 139))
     x = img_to_array(img)
     x = np.expand_dims(x, axis=0)
     x = preprocess_input(x)
@@ -39,6 +39,11 @@ model = load_model('./model.h5')
 for image_name in dataset_image:
     image = cv2.imread(join(datapath,image_name))
 
+    w, h, c = image.shape
+
+    if w < 149 and h < 149:
+        pass
+
     predict_dict = predict(join(datapath,image_name))
 
     # image = cv2.putText(image, 'Conf Score:' + predict_dict['conf'],(50,50), cv2.FONT_HERSHEY_SIMPLEX,1,(255, 0, 0),2,cv2.LINE_AA)
@@ -54,6 +59,9 @@ for image_name in dataset_image:
             os.rename(join(datapath + image_name), join(label_dir['n'] + image_name))
         elif key == ord('x'):
             pass
+        elif key == ord('z'):
+            os.rename(join(datapath + image_name), join('./train/' +
+             predict_dict['human_class']  + '/' + image_name))
         elif key == 113:
             break
     except FileExistsError as e:
